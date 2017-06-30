@@ -1,0 +1,36 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="data-rest">
+  <script>
+    /**
+     * `data-rest`
+     *
+     * A fabulous troubador that conveys the intricate meaning of your data, along the data itself, of course
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class DataRest extends customElements.get( "iron-ajax") {
+      static get is() { return "data-rest"; }
+      // static get properties() {
+      //   return {
+      //     data: {
+      //       type: Object,
+      //       readOnly: true,
+      //       notify: true,
+      //       value: { 
+      //         data: null,
+      //         errors: null,
+      //         extensions: null,
+      //         schema: null
+      //       }
+      //     }
+      //   };
+      // }
+    }
+
+    window.customElements.define( DataRest.is, DataRest);
+  </script>
+</dom-module>

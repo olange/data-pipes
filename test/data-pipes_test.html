@@ -4,36 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>‹data-rest› test</title>
+    <title>data-pipes test</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../data-rest.html">
+    <link rel="import" href="../data-pipes.html">
   </head>
   <body>
 
     <test-fixture id="BasicTestFixture">
       <template>
-        <data-rest></data-rest>
+        <data-pipes></data-pipes>
       </template>
     </test-fixture>
 
     <test-fixture id="ChangedPropertyTestFixture">
       <template>
-        <data-rest prop1="new-prop1"></data-rest>
+        <data-pipes prop1="new-prop1"></data-pipes>
       </template>
     </test-fixture>
 
     <script>
-      suite('data-rest', function() {
+      suite('data-pipes', function() {
 
         test('instantiating the element with default properties works', function() {
           var element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'data-rest');
+          assert.equal(element.prop1, 'data-pipes');
           var elementShadowRoot = element.shadowRoot;
           var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello data-rest!');
+          assert.equal(elementHeader.innerHTML, 'Hello data-pipes!');
         });
 
         test('setting a property on the element works', function() {

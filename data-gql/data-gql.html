@@ -1,0 +1,25 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="data-gql">
+  <template>
+  </template>
+
+  <script>
+    /**
+     * `data-gql`
+     * A collection of data access components, all returning immutable data structures, along with their schema in-band
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class DataPipes extends Polymer.Element {
+      static get is() { return 'data-gql'; }
+      static get properties() {
+        return {};
+      }
+    }
+
+    window.customElements.define(DataPipes.is, DataPipes);
+  </script>
+</dom-module>

@@ -28,6 +28,8 @@
       static get is() { return 'data-gql'; }
       static get properties() {
         return {
+          /** When true, the element will log its flow of execution and data to;
+              the console; intended for development, do not set in production. */
           logging: {
             type: Boolean,
             value: false,
@@ -35,6 +37,10 @@
             notify: false,
             readOnly: false
           },
+          /** When true, automatically performs a new request by calling the
+              `fetch()` method, when either `url`, `query`, `variables`, `op`
+              or `credential` changes. Otherwise, call the `fetch()` method,
+              whenever you want to (re-)fetch data. */
           auto: {
             type: Boolean,
             value: false,
@@ -42,6 +48,7 @@
             notify: false,
             readOnly: false
           },
+          /** URL of the target GraphQL server. */
           url: {
             type: String,  // URI
             value: void 0,
@@ -49,6 +56,8 @@
             notify: false,
             readOnly: false
           },
+          /** GraphQL query document, represented as a string, to submit to the server
+              to fetch or mutate data. */
           query: {
             type: String,
             value: void 0,
@@ -56,6 +65,8 @@
             notify: false,
             readOnly: false
           },
+          /** Name of the operation that the GraphQL should execute; only meaningful
+              if the query document defines more than one operation. */
           op: {
             type: String,
             value: void 0,
@@ -63,6 +74,7 @@
             notify: false,
             readOnly: false
           },
+          /** Map of values for the variables referenced in the query document, if any. */
           variables: {
             type: Object,
             value: void 0,
@@ -70,6 +82,36 @@
             notify: false,
             readOnly: false
           },
+          /** Credential token to send to GraphQL server to authenticate, when fetching data. */
+          credential: {
+            type: Object,
+            value: void 0,
+            // One-way, downward
+            notify: false,
+            readOnly: false
+          },
+          /** Response of the GraphQL server to the submitted query, as an immutable datastructure,
+              containing data, errors (if any) and schema, as well as some meta information.
+
+              Data structure will come in following shape:
+
+                  Map {
+                    data: Map {
+                      queryOrMutationTypeName: { ‹QueryOrMutationResult› },
+                      … more query or mutation results, if the query documents had such …
+                    },
+                    errors: List [
+                      …
+                    ],
+                    schema: Map {
+                      queryOrMutationTypeName: { ‹Schema› }
+                    },
+                    meta: Map {
+                      fetchedFrom: "‹URL›",
+                      fetchedAt: ‹Data›
+                    }
+                  }
+          */
           data: {
             type: Object,
             value: void 0,
@@ -82,7 +124,7 @@
       }
 
       static get observers() {
-        return [ "_queryChanged( query, op, variables)" ];
+        return [ "_queryChanged( url, query, variables, op, credential)" ];
       }
 
       static get log() {
@@ -120,7 +162,7 @@
         };
       }
 
-      _queryChanged( query, op, variables) {
+      _queryChanged( url, query, variables, op, credential) {
         if( this.auto) {
           Polymer.RenderStatus.afterNextRender( this, this.fetch);
         }
@@ -135,22 +177,23 @@
       fetch() {
         if( this.logging)
           DataGQL.log.info( `Querying GQL server at ${this.url}${this.op ? " for op " + this.op : ""}…`);
-        var boundHandleResponse = this._handleResponse.bind( this);
         this.$.xhr.send({
           method: "GET",
           url: DataGQL._serializeQueryToURL( this.url, this.query, this.variables, this.op),
           async: true, handleAs: "json"
-        }).then( function( xhrObj) {
-          DataGQL.log.debug( "Received result: ", xhrObj);
-          boundHandleResponse( xhrObj.response);
-        }).catch( function( err) {
+        }).then(( xhrObj) => {
+          const response = xhrObj.response;
+          if( this.logging)
+            DataGQL.log.debug( "Received response", response);
+          this._handleResponse( response);
+        }).catch(( err) => {
           DataGQL.log.error( "Received error: " + err);
         });
       }
 
       _handleResponse( response) {
         if( this.logging)
-          DataGQL.log.debug( "Received response", response);
+          DataGQL.log.debug( "Transforming XHR response into an immutable datastructure", response);
         this._setData( new Polymer.DataGQL.Entities.Response({
           meta: new Polymer.DataGQL.Entities.Meta({
             fetchedFrom: this.url,

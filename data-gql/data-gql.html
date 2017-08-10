@@ -142,6 +142,21 @@
           + (( typeof opName === "undefined" || opName === null) ? "" : `&operationName=${opName}`);
       }
 
+      static _makeSchemaForData( dataObj) {
+        const firstKeyName = Object.keys( dataObj)[ 0];
+        return Immutable.Map().set( firstKeyName,
+          new Polymer.DataGQL.SchemaEntities.QueryResultRecordType({
+            item: Immutable.Map({
+              id: new Polymer.DataGQL.SchemaEntities.ScalarIDType(),
+              description: new Polymer.DataGQL.SchemaEntities.ScalarStringType(),
+              isPrivate: new Polymer.DataGQL.SchemaEntities.ScalarBooleanType(),
+              license: new Polymer.DataGQL.SchemaEntities.ScalarStringType(),
+              pushedAt: new Polymer.DataGQL.SchemaEntities.ScalarDateType()
+            })
+          })
+        );
+      }
+
       constructor() {
         super();
         if( typeof Polymer.DataGQL === "undefined" || Polymer.DataGQL === null) {
@@ -157,6 +172,34 @@
                 schema: void 0,
                 meta: void 0
               }, "Response")
+            },
+            SchemaEntities: {
+              QueryResultRecordType: Immutable.Record({
+                kind: "QUERYRESULT",
+                type: "Record",
+                item: void 0
+              }, "Record"),
+              QueryResultRecordsetType: Immutable.Record({
+                kind: "QUERYRESULT",
+                type: "Recordset",
+                items: void 0
+              }, "Recordset"),
+              ScalarIDType: Immutable.Record({
+                kind: "SCALAR",
+                type: "String"
+              }, "ID"),
+              ScalarStringType: Immutable.Record({
+                kind: "SCALAR",
+                type: "String"
+              }, "String"),
+              ScalarBooleanType: Immutable.Record({
+                kind: "SCALAR",
+                type: "Boolean"
+              }, "Boolean"),
+              ScalarDateType: Immutable.Record({
+                kind: "SCALAR",
+                type: "Date"
+              }, "Date")
             }
           };
         };
@@ -181,27 +224,39 @@
           method: "GET",
           url: DataGQL._serializeQueryToURL( this.url, this.query, this.variables, this.op),
           async: true, handleAs: "json"
-        }).then(( xhrObj) => {
-          const response = xhrObj.response;
-          if( this.logging)
-            DataGQL.log.debug( "Received response", response);
-          this._handleResponse( response);
         }).catch(( err) => {
-          DataGQL.log.error( "Received error: " + err);
+          DataGQL.log.error( "Error while querying server: " + err);
+        }).then(( xhrObj) => {
+          if( this.logging)
+            DataGQL.log.debug( "Received response from server with status " + xhrObj.status,
+              { status: xhrObj.status, statusText: xhrObj.statusText,
+                errored: xhrObj.errored, timedOut: xhrObj.timedOut, aborted: xhrObj.aborted });
+          this._handleResponse( xhrObj.response);
+        }).catch(( err) => {
+          DataGQL.log.error( "Error while transforming response: " + err);
         });
       }
 
       _handleResponse( response) {
         if( this.logging)
           DataGQL.log.debug( "Transforming XHR response into an immutable datastructure", response);
+
+        const responseNorm = (response != null) ? {
+          data: response.hasOwnProperty( "data") ? response.data : void 0,
+          errors: response.hasOwnProperty( "errors") ? response.errors : void 0
+        } : {
+          data: void 0,
+          errors: void 0
+        };
+
         this._setData( new Polymer.DataGQL.Entities.Response({
           meta: new Polymer.DataGQL.Entities.Meta({
             fetchedFrom: this.url,
             fetchedAt: new Date(),
           }),
-          data: Immutable.fromJS( response.data),
-          errors: Immutable.fromJS( response.errors),
-          schema: Immutable.Map()
+          data: Immutable.fromJS( responseNorm.data),
+          errors: Immutable.fromJS( responseNorm.errors),
+          schema: DataGQL._makeSchemaForData( responseNorm.data)
         }));
       }
     }

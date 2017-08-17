@@ -3,10 +3,6 @@
 <link rel="import" href="../../iron-ajax/iron-request.html">
 
 <dom-module id="data-gql">
-  <template>
-    <iron-request id="xhr" hidden></iron-request>
-  </template>
-
   <script>
     /**
      * `data-gql`
@@ -218,9 +214,10 @@
       }
 
       fetch() {
+        var request = (document.createElement('iron-request'));
         if( this.logging)
           DataGQL.log.info( `Querying GQL server at ${this.url}${this.op ? " for op " + this.op : ""}…`);
-        this.$.xhr.send({
+        request.send({
           method: "GET",
           url: DataGQL._serializeQueryToURL( this.url, this.query, this.variables, this.op),
           async: true, handleAs: "json"

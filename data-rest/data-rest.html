@@ -36,12 +36,12 @@
       }
 
       _computeData(data){
-        return {
-          data: Immutable.fromJS( data),
+        return Immutable.fromJS({
+          data:  data,
           errors: null,
           extensions: null,
           schema: null
-        }
+        })
       }
     }
 

@@ -1,3 +1,4 @@
+<script src="../../immutable/dist/immutable.min.js"></script>
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../iron-ajax/iron-ajax.html">
 
@@ -36,7 +37,7 @@
 
       _computeData(data){
         return {
-          data: data,
+          data: Immutable.fromJS( data),
           errors: null,
           extensions: null,
           schema: null

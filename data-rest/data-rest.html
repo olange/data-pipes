@@ -17,15 +17,18 @@
       static get is() { return "data-rest"; }
       static get properties() {
         return {
+
           data: {
             type: Object,
             readOnly: true,
             notify: true,
-            value: {
-              data: null,
-              errors: null,
-              extensions: null,
-              schema: null
+            value: () => {
+              return Immutable.fromJS({
+                data: null,
+                errors: null,
+                extensions: null,
+                schema: null
+              })
             },
             computed: "_computeData(lastResponse)"
           },

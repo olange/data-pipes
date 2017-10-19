@@ -14,21 +14,34 @@
      */
     class DataRest extends customElements.get( "iron-ajax") {
       static get is() { return "data-rest"; }
-      // static get properties() {
-      //   return {
-      //     data: {
-      //       type: Object,
-      //       readOnly: true,
-      //       notify: true,
-      //       value: {
-      //         data: null,
-      //         errors: null,
-      //         extensions: null,
-      //         schema: null
-      //       }
-      //     }
-      //   };
-      // }
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            readOnly: true,
+            notify: true,
+            value: {
+              data: null,
+              errors: null,
+              extensions: null,
+              schema: null
+            },
+            computed: "_computeData(lastResponse)"
+          },
+          lastResponse: {
+            notify: false
+          },
+        };
+      }
+
+      _computeData(data){
+        return {
+          data: data,
+          errors: null,
+          extensions: null,
+          schema: null
+        }
+      }
     }
 
     window.customElements.define( DataRest.is, DataRest);

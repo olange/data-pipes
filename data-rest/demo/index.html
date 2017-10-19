@@ -6,11 +6,11 @@
 
     <title>data-rest demo</title>
 
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../bower_components/polymer/lib/elements/dom-bind.html">
-    <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
     <link rel="import" href="../data-rest.html">
 
@@ -31,8 +31,8 @@
             <data-rest
               auto
               handle-as="text"
-              last-response="{{result}}"
-              url="http://127.0.0.1:8081/demo/data.json"></data-rest>
+              data="{{result}}"
+              url="./data.json"></data-rest>
           </template>
         </dom-bind>
       </demo-snippet>

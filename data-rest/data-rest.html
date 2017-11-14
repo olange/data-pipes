@@ -17,6 +17,9 @@
       static get is() { return "data-rest"; }
       static get properties() {
         return {
+          debug: {
+            type: Boolean
+          },
 
           data: {
             type: Object,
@@ -39,6 +42,7 @@
       }
 
       _computeData(data){
+        if(this.debug) console.log("DATA-REST> computing data from last-response:", data)
         return Immutable.fromJS({
           data:  data,
           errors: null,

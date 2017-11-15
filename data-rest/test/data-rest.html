@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>‹data-rest› test</title>
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../data-rest.html">
+    <link rel="import" href="../../data-imports/immutablejs-import.html">
+  </head>
+  <body>
+
+    <test-fixture id="basicFixture">
+      <template>
+        <data-rest></data-rest>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('data-rest', function() {
+        test('data property exposes an immutable data-nugget', function() {
+          let dataRestElement = fixture('basicFixture');
+          expect(dataRestElement.data.has('data')).to.be.true;
+          expect(dataRestElement.data.has('schema')).to.be.true;
+        });
+      });
+    </script>
+  </body>
+</html>

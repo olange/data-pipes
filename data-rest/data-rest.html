@@ -35,9 +35,13 @@
             },
             computed: "_computeData(lastResponse)"
           },
-          lastResponse: {
-            notify: false
-          },
+
+          onError: {
+            type: Object,
+            readOnly: true,
+            notify: true,
+            computed: "_computeError(lastError)"
+          }
         };
       }
 
@@ -50,6 +54,10 @@
           extensions: null,
           schema: null
         })
+      }
+
+      _computeError(err){
+        return err
       }
     }
 

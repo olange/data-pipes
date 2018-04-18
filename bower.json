@@ -3,7 +3,7 @@
   "description": "A collection of data access components, always returning immutable data structures, along with their schema in-band",
   "main": "data-pipes.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.2.0",
+    "polymer": "Polymer/polymer#2.6.0",
     "iron-ajax": "PolymerElements/iron-ajax#^2.0.2",
     "immutable": "facebook/immutable-js#v4.0.0-rc.4"
   },
@@ -11,8 +11,5 @@
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
-  },
-  "resolutions": {
-    "polymer": "^2.2.0"
   }
 }

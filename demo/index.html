@@ -1,30 +1,94 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<html>
 
-    <title>‹data-pipes› demo</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <title>‹data-pipes›</title>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../data-pipes.html">
+  <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="/libs/immutable.min.js"></script>
+  <script type="module" src="/node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="/node_modules/@polymer/iron-demo-helpers/demo-snippet.js"></script>
 
+  <script type="module">
+    import '../data-pipes.js';
+  </script>
+</head>
+
+<script type="module">
+  const $_documentContainer = document.createElement('template');
+  $_documentContainer.innerHTML = `
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic data-pipes demo</h3>
-      <demo-snippet>
-        <template>
-          <data-pipes></data-pipes>
-        </template>
-      </demo-snippet>
+      <style is="custom-style" include="demo-pages-shared-styles"></style>
+    </custom-style>`;
+  document.body.appendChild($_documentContainer.content);
+</script>
+
+<body unresolved>
+  <div class="polymer-demo vertical-section-container centered">
+    <h1 id="data-pipes">‹data-pipes›</h1>
+    <div class="polymer-description">
+      <code>‹data-pipes›</code> is a collection of data access components,
+      always returning immutable data structures, along with their schema
+      in-band
+      <br><br>
+      <div class="polymer-info">
+        See:
+        <a href="../docs.html#/elements/data-pipes" target="_blank">Documentation</a>
+        <a href="#data-pipes">Demo</a>
+      </div>
     </div>
-  </body>
-</html>
+    <br>
+    <demo-snippet>
+      <template>
+        <style>
+        textarea { width: 100%; height: 100px;}
+        </style>
+
+        <h3>Data-Rest</h3>
+        <data-rest id="rest"
+                  auto
+                  handle-as="json"
+                  url="./data.json"></data-rest>
+        <textarea id="rest_result"></textarea>
+
+        <h3>Data-Format example</h3>
+        <data-format id="format" in='{something: "dataNugget"}' lang="en-EN" out="{{result}}"></data-format>
+        <textarea id="format_result"></textarea>
+
+        <h3>Data-GQL example</h3>
+        <data-gql auto
+                  id="gql"
+                  logging
+                  url="./gql-result.json"
+                  query="query { repository( owner: 'olange & yves', name: 'data-pipes') { id description isPrivate license pushedAt } }"
+                  variables='{ "arg1": "value1" }'
+                  data="{{data}}"></data-gql>
+        <textarea id="gql_result"></textarea>
+
+        <script>
+          let rest = document.getElementById("rest");
+          rest.addEventListener("on-data-changed", (e) => {
+            document.getElementById("rest_result").value = JSON.stringify(e.detail.toJS(), null, 2);
+          });
+
+
+          let format = document.getElementById("format");
+          format.addEventListener("on-data-changed", (e) => {
+            document.getElementById("format_result").value = JSON.stringify(e.detail, null, 2);
+          });
+
+
+          // Listen for GQL data and set the result
+          let gql = document.getElementById("gql");
+          gql.addEventListener("on-data-changed", (e) => {
+            document.getElementById("gql_result").value = JSON.stringify(e.detail.toJS(), null, 2);
+          });
+        </script>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+

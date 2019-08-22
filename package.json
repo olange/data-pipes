@@ -10,7 +10,6 @@
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.1.0",
-    "wct-browser-legacy": "^1.0.1",
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/test-fixture": "^4.0.2",
     "chai": "^4.2.0",
